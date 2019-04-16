@@ -6,9 +6,9 @@ Description: Give coupons to visitors who visit your site frequently, or even a 
 
 
 
-require 'admin-menu.php';
+require 'adminMenu.php';
 
-
+require 'frontEndRender.php';
 
 
 
