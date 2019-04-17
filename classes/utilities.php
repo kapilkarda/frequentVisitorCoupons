@@ -34,6 +34,14 @@ class Utilities {
     dbDelta($createCouponTableQuery);
     dbDelta($createTargetTableQuery);
     dbDelta($createVisitsTableQuery);
+    
+    
+    
+    
+    
+    
+    
+    
   }
   
   
