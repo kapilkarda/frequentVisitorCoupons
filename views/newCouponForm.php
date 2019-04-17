@@ -99,7 +99,39 @@
       <textarea name="textCouponDescriptionField" id="textCouponDescriptionField" cols="30" rows="10">
         Add this item to your cart and use code 'OffTheFence' to take 10% off this product!
       </textarea>
-
+  
+      <label for="headlineBackgroundColor"></label>
+      <select name="headlineBackgroundColor">
+        <option value="black">Black</option>
+        <option value="white">White</option>
+        <option value="blue">Blue</option>
+        <option value="red">Red</option>
+        <option value="green">Green</option>
+        <option value="purple">Purple</option>
+      </select>
+  
+      <label for="headlineTextColor">Text Color</label>
+      <select name="headlineTextColor">
+        <option value="black">Black</option>
+        <option value="white">White</option>
+      </select>
+  
+      <label for="descriptionBackgroundColor"></label>
+      <select name="descriptionBackgroundColor">
+        <option value="black">Black</option>
+        <option value="white">White</option>
+        <option value="blue">Blue</option>
+        <option value="red">Red</option>
+        <option value="green">Green</option>
+        <option value="purple">Purple</option>
+      </select>
+  
+      <label for="descriptionTextColor">Text Color</label>
+      <select name="descriptionTextColor">
+        <option value="black">Black</option>
+        <option value="white">White</option>
+      </select>
+      
     </div>
     
     <p>
@@ -129,70 +161,21 @@
   
   
   jQuery(document).ready(function($) {
-    console.log(`=====jquery loaded=====`);
-    $('input[name="couponChoice"]')
-    console.log($('input[value="imageCouponRadio"]'), `=====$('input[name="couponChoice"]')=====`);
-    
-    
-      // toggle the coupon type selection
+    // toggle the coupon type selection
     $('input[name="couponChoice"]')
       .click(function(e) {
       if (e.target.value === 'imageCouponRadio') {
-        console.log(`=====imageCouponRadio=====`);
         $('#imageCouponSettings').show();
         $('#textCouponSettings').hide();
       } else if (e.target.value === 'textCouponRadio') {
-        console.log(`=====textCouponRadio=====`);
         $('#imageCouponSettings').hide();
         $('#textCouponSettings').show();
       }
     })
     
-    // $('input[value="imageCouponRadio"]')
-    // $("#imageCouponSettings").hide();
-    // $('input[value="textCouponRadio"]')
-    //   .click(function() {
-    //     console.log(`====fire text=====`);
-    //     $("#textCouponSettings").toggle();
-    //   })
-    
   });
   
   
   
-  
-  // function controlSpecificPageField() {
-  //   if (specificPageRadio.checked) {
-  //     console.log(specificPageRadio.checked, `=====specificPageRadio.checked=====`);
-  //     specificPageField.style.display = 'block'
-  //   } else {
-  //     specificPageField.style.display = 'none'
-  //   }
-  // }
-  
-  
-  // jQuery way
-  // conditional render the target box
-  // $('input[name="trackingScope"]')
-  //   .click(function(event) {
-  //     if (event.target.value === 'specificPage') {
-  //       $("#specificPageField").show();
-  //     } else {
-  //       $("#specificPageField").hide();
-  //     }
-  //   });
-  //
-  // $("#specificPageField").hide();
-  //
-  //
-  // $('input[name="choose"]').click(function(e) {
-  //   if(e.target.value === 'yes') {
-  //     $('#optional').show();
-  //   } else {
-  //     $('#optional').hide();
-  //   }
-  // });
-  //
-  // $('#optional').hide();
 
 </script>
