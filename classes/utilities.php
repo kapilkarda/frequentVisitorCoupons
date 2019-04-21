@@ -9,9 +9,7 @@ class Utilities {
     primary key (couponId),
     totalHits mediumint not null,
     isText boolean not null,
-    imageUrl text(1000),
-    fk_targets_coupons mediumint not null unique,
-    foreign key fk_targets_coupons references wp_frequentVisitorCoupons_targets(targetId) on delete cascade
+    imageUrl text(1000)
     )";
   
     $createTargetTableQuery = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}frequentVisitorCoupons_targets (
@@ -20,7 +18,9 @@ class Utilities {
       isSitewide tinyint(1) not null,
       targetUrl varchar(500),
       displayThreshold tinyint(5) not null default 20,
-      offerCutoff tinyint(5)
+      offerCutoff tinyint(5),
+      fk_coupons_targets mediumint not null unique,
+      foreign key fk_coupons_targets references wp_frequentVisitorCoupons_coupons(couponId) on delete cascade
     )";
     
     $createVisitsTableQuery = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}frequentVisitorCoupons_visits (

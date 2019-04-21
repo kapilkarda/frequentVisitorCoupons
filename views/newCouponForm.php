@@ -6,22 +6,28 @@
   <p>Explainer goes here</p>
   
   <form
-    action="<?php echo
-    esc_url(admin_url('admin-post.php'));
-    ?>"
+    action="admin-post.php"
+    method="post"
     id="newCouponForm"
-    enctype="multipart/form-data"
+    
   >
+    <input
+      type="hidden"
+      name="action"
+      value="handleNewCoupon"
+    />
+    
+    
     <h3>Add a new coupon</h3>
     
     <h4>Step 1) Choose where visitors will be tracked and counted</h4>
     <input type="hidden" name="action" value="fromNewCouponForm">
     
     <p>
-    <h4>Step 2) Choose where visits count</h4>
-    <label for="trackingScope">
-      This new coupon should track a visitor's visits to...
-    </label>
+      <h4>Step 2) Choose where visits count</h4>
+      <label for="trackingScope">
+        This new coupon should track a visitor's visits to...
+      </label>
     </p>
     
     <p>
@@ -53,13 +59,20 @@
       </p>
     </div>
     
-    <h4>Step 3) Number of times to make the offer</h4>
-    
-    <label for="numberOfOffers">
-      How many times should the visitor see this offer?
-    </label>
+    <h4>Step 3) Coupon display options</h4>
     
     <p>
+      <label for="hitsBeforeShowing">How many times should the user visit the target page (or website) before seeing this coupon?</label>
+      <input
+        type="number"
+        name="hitsBeforeShowing"
+      >
+    </p>
+    
+    <p>
+      <label for="numberOfOffers">
+        How many times should the visitor see this offer?
+      </label>
       <input
         type="number"
         name="numberOfOffers"
@@ -70,10 +83,11 @@
     
     <h4>Step 4) Choose a text or image coupon</h4>
     <p>
-      <input type="radio" name="couponChoice" value="imageCouponRadio">I have an image I would like to use</input>
+      <input type="radio" name="couponChoice" value="imageCouponRadio"><span>I have an image I would like to use</span>
+      
     </p>
     <p>
-      <input type="radio" name="couponChoice" value="textCouponRadio">I would like to type a coupon title and description to create a text based coupon</input>
+      <input type="radio" name="couponChoice" value="textCouponRadio"><span>I would like to type a coupon title and description to create a text based coupon</span>
     </p>
     
     <!--  Step 4 settings area. hidden by default  -->
@@ -97,6 +111,7 @@
         <input
           type="text"
           id="textCouponTitleField"
+          name="textCouponTitleField"
           placeholder="On the fence? Order now and take 10% off!"
         >
       </p>
@@ -153,7 +168,7 @@
     <p>
       <button type="submit">Create New Coupon</button>
     </p>
-    </p></p></form>
+  </form>
   
 </div>
 
