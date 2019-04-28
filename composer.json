@@ -7,8 +7,6 @@
         "symfony/var-dumper": "^4.2"
     },
     "autoload": {
-        "psr-4": {
-        "": "./classes"
-        }
+        "classmap": ["classes/"]
     }
 }

@@ -58,10 +58,6 @@ class ComposerStaticInit5261c738af354571f6b2a4fcee62a69e
         ),
     );
 
-    public static $fallbackDirsPsr4 = array (
-        0 => __DIR__ . '/../..' . '/classes',
-    );
-
     public static $prefixesPsr0 = array (
         'P' => 
         array (
@@ -72,13 +68,18 @@ class ComposerStaticInit5261c738af354571f6b2a4fcee62a69e
         ),
     );
 
+    public static $classMap = array (
+        'MyGlobals' => __DIR__ . '/../..' . '/classes/MyGlobals.php',
+        'Utilities' => __DIR__ . '/../..' . '/classes/Utilities.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit5261c738af354571f6b2a4fcee62a69e::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit5261c738af354571f6b2a4fcee62a69e::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit5261c738af354571f6b2a4fcee62a69e::$fallbackDirsPsr4;
             $loader->prefixesPsr0 = ComposerStaticInit5261c738af354571f6b2a4fcee62a69e::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit5261c738af354571f6b2a4fcee62a69e::$classMap;
 
         }, null, ClassLoader::class);
     }

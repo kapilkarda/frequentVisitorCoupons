@@ -6,4 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'MyGlobals' => $baseDir . '/classes/MyGlobals.php',
+    'Utilities' => $baseDir . '/classes/Utilities.php',
 );

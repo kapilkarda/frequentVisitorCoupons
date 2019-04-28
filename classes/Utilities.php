@@ -4,6 +4,11 @@ class Utilities {
   public static function createTablesIfNotExists() {
     global $wpdb;
   
+    $dummyQuery = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}testCreate (
+    testId mediumint not null auto_increment unique,
+    primary key (testId)
+    )";
+  
     $createCouponTableQuery = "CREATE TABLE IF NOT EXISTS {$wpdb->prefix}frequentVisitorCoupons_coupons (
     couponId mediumint not null auto_increment unique,
     primary key (couponId),
@@ -34,6 +39,7 @@ class Utilities {
     dbDelta($createCouponTableQuery);
     dbDelta($createTargetTableQuery);
     dbDelta($createVisitsTableQuery);
+    dbDelta($dummyQuery);
     
   }
   

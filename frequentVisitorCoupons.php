@@ -13,7 +13,7 @@ require 'adminMenu.php';
 require 'frontEndRender.php';
 
 require 'vendor/autoload.php';
-//require_once 'classes/utilities.php';
+// require_once 'classes/Utilities.php';
 
 
 //////////////// ACTIVATION ////////////////////
