@@ -9,7 +9,7 @@
     action="admin-post.php"
     method="post"
     id="newCouponForm"
-    
+    enctype="multipart/form-data"
   >
     <input
       type="hidden"
@@ -20,11 +20,10 @@
     
     <h3>Add a new coupon</h3>
     
-    <h4>Step 1) Choose where visitors will be tracked and counted</h4>
-    <input type="hidden" name="action" value="fromNewCouponForm">
+
     
     <p>
-      <h4>Step 2) Choose where visits count</h4>
+    <h4>Step 1) Choose where visitors will be tracked and counted</h4>
       <label for="trackingScope">
         This new coupon should track a visitor's visits to...
       </label>
@@ -59,7 +58,7 @@
       </p>
     </div>
     
-    <h4>Step 3) Coupon display options</h4>
+    <h4>Step 2) Coupon display options</h4>
     
     <p>
       <label for="hitsBeforeShowing">How many times should the user visit the target page (or website) before seeing this coupon?</label>
@@ -81,7 +80,7 @@
       >
     </p>
     
-    <h4>Step 4) Choose a text or image coupon</h4>
+    <h4>Step 3) Choose a text or image coupon</h4>
     <p>
       <input type="radio" name="couponChoice" value="imageCouponRadio"><span>I have an image I would like to use</span>
       
@@ -118,9 +117,7 @@
       
       <p>
         <label for="textCouponDescriptionField">Write any extra information for the coupon body</label>
-        <textarea name="textCouponDescriptionField" id="textCouponDescriptionField" cols="30" rows="10">
-        Add this item to your cart and use code 'OffTheFence' to take 10% off this product!
-      </textarea>
+        <textarea name="textCouponDescriptionField" id="textCouponDescriptionField" cols="30" rows="10" placeholder="Add this item to your cart and use code 'OffTheFence' to take 10% off this product!"></textarea>
       </p>
       
       <p>

@@ -5,7 +5,21 @@ Description: Give coupons to visitors who visit your site frequently, or even a 
 */
 
 
-add_action('admin_post_handleNewCoupon', 'setupCouponTargetImageUpload');
+
+// hooks into admin-menu
+require 'adminMenu.php';
+
+// hooks into wp-footer
+require 'frontEndRender.php';
+
+require 'vendor/autoload.php';
+//require_once 'classes/utilities.php';
+
+
+//////////////// ACTIVATION ////////////////////
+
+register_activation_hook(__FILE__, 'Utilities::createTablesIfNotExists');
+
 
 
 
@@ -16,8 +30,6 @@ function uploadImage() {
   
   // tmp_name is file contents. name is file name
   $fileName = basename($_FILES['couponImage']['name']);
-  var_dump($fileName);
-  echo '=====$fileName=====';
   
   // take the file named in the POST request and move it to './images'
   move_uploaded_file(
@@ -29,31 +41,37 @@ function uploadImage() {
 
 function selectCouponType() {
   // detect if there is an image being uploaded
-  if ($_POST['imageCoupon']) {
+  
+  if ($_FILES['imageCoupon']) {
     return 'image';
   } else if ($_POST['textCouponTitleField']) {
     return 'text';
   } else {
     // error handling
-    return print_r('issue in selectCouponType() function');
+    return ('issue in selectCouponType() function');
   }
 };
 
 
 function insertImageCoupon() {
   global $wpdb;
-  $fileUrl = plugin_dir_url(__FILE__) . '/images/' . $_FILES['couponImage']['name'];
   
-  $insertedCoupon = $wpdb->insert(
-    "{$wpdb->prefix}frequentVisitorCoupons_coupon", [
-      'totalHits' => 0,
-      'isText' => false,
-      'imageUrl' =>  $fileUrl
-    ]
-  );
   
-  var_dump($insertedCoupon);
-  echo '=====$insertedCoupon=====';
+  $fileUrl = plugin_dir_url(__FILE__) . 'images/' . $_FILES['imageCoupon']['name'];
+
+//  $insertedCoupon = $wpdb->insert(
+//    "{$wpdb->prefix}frequentVisitorCoupons_coupon", [
+//      'totalHits' => 0,
+//      'isText' => false,
+//      'imageUrl' =>  $fileUrl
+//    ]
+//  );
+//
+//  var_dump($insertedCoupon);
+//  echo <<<'EOD'
+//  =====$insertedCoupon=====
+EOD;
+
 };
 
 function insertTextCoupon() {
@@ -76,25 +94,16 @@ function addNewTarget() {
 function setupCouponTargetImageUpload() {
   // $_POST and $_FILE should be available
   
-  echo 'Yay, it works!';
-  exit;
-  
-  ?>
-    <script>
-      console.log(`=====test=====`); // doesn't log
-    </script>
-  <?php  
-
-//  $couponType = selectCouponType();
-//  var_dump($couponType);
-//  echo '=====$couponType====='; // doesn't echo
+  $couponType = selectCouponType();
+  var_dump($couponType);
+  echo '=====$couponType=====';
   
   // upload the image URL if needed
-//  if($couponType === 'image') {
-//    insertImageCoupon();
-//  } else if ($couponType === 'text') {
-//    insertTextCoupon();
-//  }
+  if($couponType === 'image') {
+    insertImageCoupon();
+  } else if ($couponType === 'text') {
+    insertTextCoupon();
+  }
   
   // addNewTarget(); // todo work on this next
   
@@ -102,32 +111,13 @@ function setupCouponTargetImageUpload() {
 //  exit;
 }
 
-
-
-
-// Add at the top-level..
-add_action( 'admin_post_test123', 'testActionHandler');
-
-
-
-function testActionHandler () {
-  echo 'Yay, it works!';
-  
-  var_dump($_REQUEST);
-  echo '=====$_REQUEST=====';
-  
-  exit;
-}
+add_action('admin_post_handleNewCoupon', 'setupCouponTargetImageUpload');
 
 
 
 
 
-// hooks into admin-menu
-require 'adminMenu.php';
 
-// hooks into wp-footer
-require 'frontEndRender.php';
 
 
 
