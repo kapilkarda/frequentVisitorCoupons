@@ -26,18 +26,20 @@ register_activation_hook(__FILE__, 'Utilities::createTablesIfNotExists');
 
 // handle the new coupon form
 
-function uploadImage() {
+function uploadImageAndGetDestination() {
   
   // tmp_name is file contents. name is file name
-  $fileName = basename($_FILES['couponImage']['name']);
+  $fileName = $_FILES['imageCoupon']['name'];
+  $fileContents = $_FILES['imageCoupon']['tmp_name'];
+  $destination = wp_upload_dir()['path'] . '/' . $fileName;
   
   // take the file named in the POST request and move it to './images'
-  move_uploaded_file(
-    $fileName,
-    plugin_dir_path(__FILE__) . '/images/'
-    );
-  // path is user for internal usage (urls for external)
+  // path is for internal usage (urls for external)
+  move_uploaded_file($fileContents, $destination);
+  
+  return $destination;
 };
+
 
 function selectCouponType() {
   // detect if there is an image being uploaded
@@ -53,36 +55,53 @@ function selectCouponType() {
 };
 
 
-function insertImageCoupon() {
+function insertImageCoupon(string $imagePath) {
   global $wpdb;
   
+  // pull the filename and folder dates out of the string
+  preg_match('/\/(\d\d\d\d\/\d\d)\/(.+)/', $imagePath, $pathMatchArray);
   
-  $fileUrl = plugin_dir_url(__FILE__) . 'images/' . $_FILES['imageCoupon']['name'];
+  // handle the case with the date folders, and without
+  $firstItem = $pathMatchArray[1];
+  // if first match is the date folders
+  if (preg_match('/(\d\d\d\d/\d\d/)', $firstItem)) {
+    // $dateFolders are present
+    $matchedDateFolders = $firstItem;
+    $fileName = $pathMatchArray[2];
+  } else if (preg_match('/[a-zA-Z]+/', $firstItem)) {
+    $matchedDateFolders = null;
+    $fileName = $pathMatchArray[1];
+  } else { return 'error on image path matching'; }
+  
+  
+  // insert the new record
+  $insertedCoupon = $wpdb->insert(
+    "{$wpdb->prefix}frequentVisitorCoupons_coupon", [
+      'totalHits' => 0,
+      'isText' => false,
+      'fileName' =>  $fileName,
+      'folderDateString' => $matchedDateFolders
+    ]
+  );
 
-//  $insertedCoupon = $wpdb->insert(
-//    "{$wpdb->prefix}frequentVisitorCoupons_coupon", [
-//      'totalHits' => 0,
-//      'isText' => false,
-//      'imageUrl' =>  $fileUrl
-//    ]
-//  );
-//
-//  var_dump($insertedCoupon);
-//  echo <<<'EOD'
-//  =====$insertedCoupon=====
+  var_dump($insertedCoupon);
+  echo <<<'EOD'
+  =====$insertedCoupon=====
 EOD;
 
 };
 
-function insertTextCoupon() {
+function insertTextCoupon(array $fileInfo) {
   global $wpdb;
   
   $wpdb->insert("{$wpdb->prefix}frequentVisitorCoupons_coupon", [
     'totalHits' => 0,
     'isText' => true,
-    'imageUrl' => null
+    'imageUrl' => null,
+    '' // todo add the text fields from the form
   ]);
 }
+
 
 
 function addNewTarget() {
@@ -95,14 +114,13 @@ function setupCouponTargetImageUpload() {
   // $_POST and $_FILE should be available
   
   $couponType = selectCouponType();
-  var_dump($couponType);
-  echo '=====$couponType=====';
   
   // upload the image URL if needed
   if($couponType === 'image') {
-    insertImageCoupon();
+    $imageInfo = uploadImageAndGetDestination();
+    insertImageCoupon($imageInfo);
   } else if ($couponType === 'text') {
-    insertTextCoupon();
+//    insertTextCoupon($textInfo); // todo write the insert
   }
   
   // addNewTarget(); // todo work on this next
