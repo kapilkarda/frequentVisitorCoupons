@@ -57,39 +57,44 @@ function selectCouponType() {
 
 function insertImageCoupon(string $imagePath) {
   global $wpdb;
-  
+
   // pull the filename and folder dates out of the string
-  preg_match('/\/(\d\d\d\d\/\d\d)\/(.+)/', $imagePath, $pathMatchArray);
+  // todo make this work with non m/y folders too
+  // key will be making first capture group optional, probably with .
+  preg_match('/\/?(\d\d\d\d\/\d\d)?\/(.+)/', $imagePath, $pathMatchArray);
+  
+  var_dump($pathMatchArray);
+  echo <<<'EOD'
+  =====$pathMatchArray=====
+EOD;
   
   // handle the case with the date folders, and without
-  $firstItem = $pathMatchArray[1];
-  // if first match is the date folders
-  if (preg_match('/(\d\d\d\d/\d\d/)', $firstItem)) {
-    // $dateFolders are present
-    $matchedDateFolders = $firstItem;
-    $fileName = $pathMatchArray[2];
-  } else if (preg_match('/[a-zA-Z]+/', $firstItem)) {
-    $matchedDateFolders = null;
-    $fileName = $pathMatchArray[1];
-  } else { return 'error on image path matching'; }
+  $dateCaptureGroup = $pathMatchArray[1];
+  $fileName = $pathMatchArray[2];
   
+  // if capture group 1 is the date folders with corner /'s removed
+  if (preg_match('/(\d\d\d\d\/\d\d)/', $dateCaptureGroup)) {
+    // $dateFolders are present
+    $matchedDateFoldersOrNull = $dateCaptureGroup;
+  } else {
+    var_dump('here 2');
+    // needed to convert '' to null
+    $matchedDateFoldersOrNull = null;
+  }
   
   // insert the new record
   $insertedCoupon = $wpdb->insert(
-    "{$wpdb->prefix}frequentVisitorCoupons_coupon", [
+    "{$wpdb->prefix}frequentVisitorCoupons_coupons", [
       'totalHits' => 0,
       'isText' => false,
       'fileName' =>  $fileName,
-      'folderDateString' => $matchedDateFolders
+      'folderDateString' => $matchedDateFoldersOrNull
     ]
   );
 
-  var_dump($insertedCoupon);
-  echo <<<'EOD'
-  =====$insertedCoupon=====
-EOD;
-
+  // on success 1 is returned, signifying 1 affected row
 };
+
 
 function insertTextCoupon(array $fileInfo) {
   global $wpdb;
