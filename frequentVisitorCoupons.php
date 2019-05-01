@@ -59,40 +59,35 @@ function insertImageCoupon(string $imagePath) {
   global $wpdb;
 
   // pull the filename and folder dates out of the string
-  // todo make this work with non m/y folders too
   // key will be making first capture group optional, probably with .
-  preg_match('/\/?(\d\d\d\d\/\d\d)?\/(.+)/', $imagePath, $pathMatchArray);
-  
-  var_dump($pathMatchArray);
-  echo <<<'EOD'
-  =====$pathMatchArray=====
-EOD;
-  
-  // handle the case with the date folders, and without
+  preg_match('/\/(\d\d\d\d\/\d\d)\/(.+)/', $imagePath, $pathMatchArray);
   $dateCaptureGroup = $pathMatchArray[1];
   $fileName = $pathMatchArray[2];
   
-  // if capture group 1 is the date folders with corner /'s removed
+  // if no date match, capture the suffix into $fileName
+  if ($dateCaptureGroup === '') {
+    preg_match('/\/([^/]+)$/', $fileName);
+  }
+  
   if (preg_match('/(\d\d\d\d\/\d\d)/', $dateCaptureGroup)) {
     // $dateFolders are present
     $matchedDateFoldersOrNull = $dateCaptureGroup;
   } else {
-    var_dump('here 2');
-    // needed to convert '' to null
     $matchedDateFoldersOrNull = null;
   }
   
   // insert the new record
-  $insertedCoupon = $wpdb->insert(
+  $wpdb->insert(
     "{$wpdb->prefix}frequentVisitorCoupons_coupons", [
       'totalHits' => 0,
-      'isText' => false,
+      'isText' => 0,
       'fileName' =>  $fileName,
       'folderDateString' => $matchedDateFoldersOrNull
     ]
   );
-
-  // on success 1 is returned, signifying 1 affected row
+  
+  $couponId = $wpdb->insert_id;
+  return $couponId;
 };
 
 
@@ -107,6 +102,27 @@ function insertTextCoupon(array $fileInfo) {
   ]);
 }
 
+function insertTarget($couponId) {
+  global $wpdb;
+  
+  $isSitewide = $_POST['trackingScope'] === 'wholeSite' ? 1 : 0;
+  
+  $wpdb->insert(
+    "{$wpdb->prefix}frequentVisitorCoupons_targets", [
+      'isSitewide' => $isSitewide,
+      'displayThreshold' => $_POST['hitsBeforeShowing'],
+      'offerCutoff' => $_POST['numberOfOffers'],
+      'fk_coupons_targets' => $couponId,
+    ]
+  );
+
+  $queryResult = $wpdb->query("select * from {$wpdb->prefix}frequentVisitorCoupons_targets");
+  
+  var_dump($queryResult);
+  echo <<<'EOD'
+  =====$queryResult=====
+EOD;
+};
 
 
 function addNewTarget() {
@@ -123,7 +139,8 @@ function setupCouponTargetImageUpload() {
   // upload the image URL if needed
   if($couponType === 'image') {
     $imageInfo = uploadImageAndGetDestination();
-    insertImageCoupon($imageInfo);
+    $couponId = insertImageCoupon($imageInfo);
+    insertTarget($couponId);
   } else if ($couponType === 'text') {
 //    insertTextCoupon($textInfo); // todo write the insert
   }
