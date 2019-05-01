@@ -125,9 +125,6 @@ EOD;
 };
 
 
-function addNewTarget() {
-  // target insert query
-};
 
 
 
@@ -141,14 +138,15 @@ function setupCouponTargetImageUpload() {
     $imageInfo = uploadImageAndGetDestination();
     $couponId = insertImageCoupon($imageInfo);
     insertTarget($couponId);
+    wp_redirect('http://localhost/wptest2/wp-admin');
   } else if ($couponType === 'text') {
 //    insertTextCoupon($textInfo); // todo write the insert
   }
   
   // addNewTarget(); // todo work on this next
   
-//  wp_redirect('http://google.com'); // no redirect
-//  exit;
+  wp_redirect(admin_url('options-general.php?page=fvc-settings')); // no redirect
+  exit;
 }
 
 add_action('admin_post_handleNewCoupon', 'setupCouponTargetImageUpload');
