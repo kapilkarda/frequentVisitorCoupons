@@ -29,9 +29,25 @@ add_action('admin_enqueue_scripts', 'loadAdminScripts');
 
 
 function buildSettingsPage() {
-  require 'views/newCouponForm.php';
-  require 'views/currentCoupons.php';
+  require_once 'classes/AdminUtilities.php';
+
+
+  // NEW COUPON FORM //
+  require_once 'views/newCouponForm.php';
   
+  
+  // CURRENT COUPONS TABLE //
+  // $targetData =
+  AdminUtilities::loadTargets();
+  
+  require_once 'views/currentCoupons.php';
+  
+  
+  
+  
+  
+  
+  /////////// TEST AREA FOR COOKIES ///////////////
   $key = "example_key";
   $token = array(
     "iss" => "http://example.org",

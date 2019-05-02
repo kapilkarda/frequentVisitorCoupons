@@ -110,6 +110,7 @@ function insertTarget($couponId) {
   $wpdb->insert(
     "{$wpdb->prefix}frequentVisitorCoupons_targets", [
       'isSitewide' => $isSitewide,
+      'targetUrl' => $_POST['specificPageField'],
       'displayThreshold' => $_POST['hitsBeforeShowing'],
       'offerCutoff' => $_POST['numberOfOffers'],
       'fk_coupons_targets' => $couponId,
