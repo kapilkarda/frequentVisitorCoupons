@@ -2,20 +2,6 @@
 
 class AdminUtilities {
   
-  public static function loadTargets() {
-    global $wpdb;
-    
-    $targetData = $wpdb->get_results(
-      "select * from {$wpdb->prefix}frequentVisitorCoupons_targets"
-    );
-    
-    var_dump($targetData);
-    echo <<<'EOD'
-    =====$targetData=====
-EOD;
-    return $targetData;
-  }
-  
   public static function sumSpecificPageViews(int $visitorId, string $currentUrl) {
     global $wpdb;
     

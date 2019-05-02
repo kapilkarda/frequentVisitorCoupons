@@ -34,8 +34,8 @@ function displayFloatingCoupon() {
   $imageUrl = 'puppetmaster.jpg';
 
 
-//  require 'views/frontEndImageCoupon.php';
-  require 'views/frontEndTextCoupon.php';
+//  require 'views/ImageCouponOverlay.php';
+  require 'views/TextCouponOverlay.php';
 }
 
 add_action('wp_footer', 'displayFloatingCoupon');

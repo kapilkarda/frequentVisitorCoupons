@@ -32,15 +32,12 @@ function buildSettingsPage() {
   require_once 'classes/AdminUtilities.php';
 
 
-  // NEW COUPON FORM //
-  require_once 'views/newCouponForm.php';
+  ////// NEW COUPON FORM //////
+  require_once 'views/admin/NewCouponFormSection.php';
   
   
   // CURRENT COUPONS TABLE //
-  // $targetData =
-  AdminUtilities::loadTargets();
-  
-  require_once 'views/currentCoupons.php';
+  require_once 'views/admin/CurrentCouponListingSection.php';
   
   
   
@@ -48,24 +45,24 @@ function buildSettingsPage() {
   
   
   /////////// TEST AREA FOR COOKIES ///////////////
-  $key = "example_key";
-  $token = array(
-    "iss" => "http://example.org",
-    "aud" => "http://example.com",
-    "iat" => 1356999524,
-    "nbf" => 1357000000
-  );
-  
-  $jwt = JWT::encode($token, $key);
-  $decoded = JWT::decode($jwt, $key, array('HS256'));
-  
-  var_dump($jwt);
-  echo '=====$jwt=====';
-  
-  echo "{$jwt}";
-  
-  var_dump($decoded);
-  echo '=====$decoded=====';
+//  $key = "example_key";
+//  $token = array(
+//    "iss" => "http://example.org",
+//    "aud" => "http://example.com",
+//    "iat" => 1356999524,
+//    "nbf" => 1357000000
+//  );
+//
+//  $jwt = JWT::encode($token, $key);
+//  $decoded = JWT::decode($jwt, $key, array('HS256'));
+//
+//  var_dump($jwt);
+//  echo '=====$jwt=====';
+//
+//  echo "{$jwt}";
+//
+//  var_dump($decoded);
+//  echo '=====$decoded=====';
   
 }
 
