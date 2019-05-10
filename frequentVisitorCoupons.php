@@ -7,7 +7,7 @@ Description: Give coupons to visitors who visit your site frequently, or even a 
 
 
 // hooks into admin-menu
-require 'adminMenu.php';
+require 'views/admin/adminMenuContainer.php';
 
 // hooks into wp-footer
 require 'frontEndRender.php';
@@ -91,7 +91,7 @@ function insertImageCoupon(string $imagePath) {
 };
 
 
-function insertTextCoupon(array $fileInfo) {
+function insertTextCoupon() {
   global $wpdb;
   
   $wpdb->insert("{$wpdb->prefix}frequentVisitorCoupons_coupon", [
@@ -135,7 +135,7 @@ function setupCouponTargetImageUpload() {
   $couponType = selectCouponType();
   
   // upload the image URL if needed
-  if($couponType === 'image') {
+  if ($couponType === 'image') {
     $imageInfo = uploadImageAndGetDestination();
     $couponId = insertImageCoupon($imageInfo);
     insertTarget($couponId);

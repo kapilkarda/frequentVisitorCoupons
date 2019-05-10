@@ -1,144 +1,6 @@
 
-<?php
-
-////// LOAD TARGET DATA FOR TARGETS TABLE //////
-function loadTargets() {
-  global $wpdb;
-  
-  $targetData = $wpdb->get_results(
-    "select * from {$wpdb->prefix}frequentVisitorCoupons_targets"
-  );
-  
-  return $targetData;
-}
-$targetData = loadTargets();
-
-
-////// SETUP PREV / NEXT BUTTON AJAX CALLS //////
-
-function ajaxPost() {
-
-  // ESCAPE PHP. SETUP THE AJAX REQUEST
-  ?>
-  <script>
-    
-    jQuery(document).ready(function() {
-    //   // everything below executes or registers when the document is ready (done loading)
-      jQuery('#previousButton').click(function() {
-
-    //   //////// 1st Ajax caller //////////
-    //     var postData = {
-    //       action : 'selectTargetsWithOffset',
-    //       headers : {
-    //         'Content-Type' : 'application/json'
-    //       },
-    //       data : {
-    //         offsetMultiplier : 1,
-    //         incrementSize : 10
-    //       },
-    //       success : function(response) {
-    //         console.log(`=====jQuery.post() success response=====`);
-    //       }
-    //     };
-    //
-    //     // callback to run when response comes back
-    //     var handleResponse = function(response) {
-    //       console.log(response, `=====handleResponse=====`);
-    //     };
-    //
-    //     jQuery.post(
-    //       ajaxurl,
-    //       postData,
-    //       handleResponse
-    //     );
-      
-      //////// 2nd Ajax caller /////////
-  
-        var ajaxScript = { ajaxUrl : <?php echo admin_url('admin-ajax.php') ?>};
-        
-        jQuery.ajax({
-          type: "POST",
-          url: ajaxScript.ajaxUrl,
-          contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
-          dataType: "json",
-          data: {
-            action: "selectTargetsWithOffset",
-          },
-          success: function(response) {
-            console.log(response, `=====success response=====`);
-          },
-          error: function(error, textStatus, errorThrown) {
-            console.log(error, '==error==');
-          }
-        });
-        
-      });
-
-    
-     //jQuery(document).on("click","#previousButton", function() {
-     //  jQuery.ajax({
-     //    url: "<?php //echo admin_url( 'admin-ajax.php' ) ?>//",
-     //    data: {"action":"selectTargetsWithOffset","datas": {"name": "yourfields"}},
-     //    type:"post",
-     //    success: function(data) { alert(data); }
-     //  })
-     //});
-  
-     
-    })
-  </script>
-  <?php
-}
-add_action('admin_footer', 'ajaxPost');
-
-
-
-///// REQUEST HANDLERS AND REGISTRATION HOOKS //////
-
-function x () {
-  // below will be the response
-  wp_send_json([ 'message' => 'from back end' ]);
-  wp_die();
-}
-
-
-function selectTargetsWithOffset() {
-  wp_send_json([ 'message' => 'from back end' ]);
-  wp_die();
-}
-
-function selectTargetsWithOffsetcb() {
-  print_r($_POST);
-  die();
-}
-
-//add_action('wp_ajax_selectTargetsWithOffset', 'selectTargetsWithOffset');
-
-add_action('wp_ajax_x', 'x');
-add_action( 'wp_ajax_selectTargetsWithOffset', "selectTargetsWithOffset");
-add_action( 'wp_ajax_nopriv_selectTargetsWithOffset', "selectTargetsWithOffsetcb" );
-
-add_action('wp_ajax_addCustomer', 'addCustomer');
-add_action('wp_ajax_nopriv_addCustomer', 'addCustomer');
-
-
-
-
-
-
-
-
-
-?>
-
-
-
-
-<!--  HTML TEMPLATE START  -->
-
 <div id="outerContainer">
   <h2>Current Coupons</h2>
-  
 <!-- Table Data -->
     <?php
       foreach ($targetData as $record):
@@ -147,7 +9,7 @@ add_action('wp_ajax_nopriv_addCustomer', 'addCustomer');
         } else {
           $targetPage = $record->targetUrl;
         }
-      ?>
+    ?>
       
       <div class="couponListing">
         <p class="label">
@@ -196,6 +58,80 @@ add_action('wp_ajax_nopriv_addCustomer', 'addCustomer');
     <button id="nextButton">Next</button>
   
 </div>
+
+
+<script>
+  
+  const getResultMarker = () => {
+    return localStorage.getItem('resultMarker')
+  };
+  
+  const setResultMarker = (currentValue, additionOrSubtraction) => {
+    additionOrSubtraction = parseInt(additionOrSubtraction);
+    
+    const sum = currentValue + additionOrSubtraction;
+    localStorage.setItem('resultMarker', sum);
+    
+    return sum;
+  };
+  
+  const adjustResultMarker = (incrementSize, currentMarker, limit) => {
+    if (!currentMarker) {
+      return 0
+    } else if (currentMarker < 0) {
+      return 0
+    } else if (
+      incrementSize < 0 &&
+      currentMarker - limit <= 0
+    ) {
+      return 0
+    }
+    else return currentMarker;
+  };
+
+
+  // incrementSize should be negative for previous button
+  function ajaxLoadTableData($, incrementSize = 10, limit = 10) {
+  
+    // get and update the result marker to avoid invalid markations
+    const oldMarker = getResultMarker();
+    const resultMarker = adjustResultMarker(incrementSize, oldMarker, limit);
+  
+    // send an ajax request to get the new results
+    var ajaxUrl = '<?php echo admin_url('admin-ajax.php') ?>';
+  
+    $.post(
+      ajaxUrl,
+      {
+        limit,
+        resultMarker,
+        action : 'queryDbForNewSelection'
+      },
+      successResponse => {
+        console.log(successResponse, `=====successResponse=====`);
+        
+        // update the resultMarker
+        setResultMarker(resultMarker, incrementSize)
+        
+        // re-render the table
+        // renderNewTableData(successResponse);
+      },
+      'json'
+    );
+
+  }
+  
+  ///// JQUERY FUNCTIONS /////
+  jQuery(document).ready(function($) {
+    console.log(`====jquery loaded======`);
+    $('#previousButton').click(function() {
+      console.log(`=====CLICK=====`);
+      $('.couponListing').html('');
+      ajaxLoadTableData($, 'next', );
+    })
+  });
+  
+</script>
 
 
 <style>
