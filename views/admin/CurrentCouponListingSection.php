@@ -2,6 +2,18 @@
 <div id="outerContainer">
   <h2>Current Coupons</h2>
 <!-- Table Data -->
+  <table>
+    <thead>
+    <tr>
+      <td>Coupon ID</td>
+      <td>Target page</td>
+      <td>Total views</td>
+      <td>Pageviews before coupon displays</td>
+      <td>Number of times to show offer</td>
+      <td>Delete</td>
+    </tr>
+    </thead>
+    <tbody id="couponTableBody">
     <?php
       foreach ($targetData as $record):
         
@@ -11,21 +23,9 @@
           $targetPage = $record->targetUrl;
         }
     ?>
-      
-      <table>
-        <thead>
-        <tr>
-          <td>Coupon ID</td>
-          <td>Target page</td>
-          <td>Total views</td>
-          <td>Pageviews before coupon displays</td>
-          <td>Number of times to show offer</td>
-          <td>Delete</td>
-        </tr>
-        </thead>
         
-        <tbody id="couponTableBody">
-            <tr>
+
+            <tr class="couponDataRow">
               <td><?php echo "{$record->targetId}" ?></td>
               <td><?php echo "{$targetPage}" ?></td>
               <td><?php echo "{$record->totalViews}" ?></td>
@@ -33,8 +33,7 @@
               <td><?php echo "{$record->offerCutoff}" ?></td>
               <td>Delete</td>
             </tr>
-        </tbody>
-      </table>
+
       
 <!--      <div class="couponListing">-->
 <!--        <p class="label">-->
@@ -77,96 +76,106 @@
 <!--        </button>-->
 <!--      </div>-->
     <?php endforeach ?>
+    </tbody>
+  </table>
   
 <!--  Prev / Next buttons  -->
     <button id="previousButton">Previous</button>
     <button id="nextButton">Next</button>
   
+  <script>
+    // the php variable will evaluate at runtime, along with the js variable that the below script file depends on
+    const ajaxUrl = '<?php echo admin_url("admin-ajax.php") ?>'
+  </script>
+<!--  <script src=--><?php //echo plugin_dir_url(__FILE__) . "/CurrentCouponListingSection.js"; ?><!-- ></script>-->
 </div>
 
 
-<script>
-  
-  const getResultMarker = () => {
-    return localStorage.getItem('resultMarker')
-  };
-  
-  const setResultMarker = (currentValue, additionOrSubtraction) => {
-    additionOrSubtraction = parseInt(additionOrSubtraction);
-    
-    const sum = currentValue + additionOrSubtraction;
-    localStorage.setItem('resultMarker', sum);
-    
-    return sum;
-  };
-  
-  const adjustResultMarker = (incrementSize, currentMarker, limit) => {
-    if (!currentMarker) {
-      return 0
-    } else if (currentMarker < 0) {
-      return 0
-    } else if (
-      incrementSize < 0 &&
-      currentMarker - limit <= 0
-    ) {
-      return 0
-    }
-    else return currentMarker;
-  };
-  
-  const renderNewTableData = (jQuery, tableData) => {
-  
-  };
-
-
-  // incrementSize should be negative for previous button
-  function ajaxLoadTableData($, incrementSize = 10, limit = 10) {
-  
-    // get and update the result marker to avoid invalid markations
-    const oldMarker = getResultMarker();
-    const resultMarker = adjustResultMarker(incrementSize, oldMarker, limit);
-  
-    // send an ajax request to get the new results
-    var ajaxUrl = '<?php echo admin_url('admin-ajax.php') ?>';
-  
-    $.post(
-      ajaxUrl,
-      {
-        limit,
-        resultMarker,
-        action : 'queryDbForNewSelection'
-      },
-      successResponse => {
-        console.log(successResponse, `=====successResponse=====`);
-        
-        // update the resultMarker
-        setResultMarker(resultMarker, incrementSize)
-        
-        // re-render the table
-        // renderNewTableData($, successResponse);
-      },
-      'json'
-    );
-
-  }
-  
-  ///// JQUERY FUNCTIONS /////
-  jQuery(document).ready(function($) {
-    console.log(`====jquery loaded======`);
-    
-    $('#previousButton').click(function() {
-      console.log(`=====CLICK=====`);
-      $('#couponTableBody').html('');
-      ajaxLoadTableData($, -10);
-    });
-    $('#nextButton').click(function() {
-      console.log(`=====CLICK=====`);
-      $('#couponTableBody').html('');
-      ajaxLoadTableData($, 10);
-    })
-  });
-  
-</script>
+<!--<script>-->
+<!--  -->
+<!--  const getResultMarker = () => {-->
+<!--    return localStorage.getItem('resultMarker')-->
+<!--  };-->
+<!--  -->
+<!--  const setResultMarker = (currentValue, additionOrSubtraction) => {-->
+<!--    additionOrSubtraction = parseInt(additionOrSubtraction);-->
+<!--    -->
+<!--    const sum = currentValue + additionOrSubtraction;-->
+<!--    localStorage.setItem('resultMarker', sum);-->
+<!--    -->
+<!--    return sum;-->
+<!--  };-->
+<!--  -->
+<!--  -->
+<!--  const adjustResultMarker = (incrementSize, currentMarker, limit) => {-->
+<!--    if (!currentMarker) {-->
+<!--      return 0-->
+<!--    } else if (currentMarker < 0) {-->
+<!--      return 0-->
+<!--    } else if (-->
+<!--      incrementSize < 0 &&-->
+<!--      currentMarker - limit <= 0-->
+<!--    ) {-->
+<!--      return 0-->
+<!--    }-->
+<!--    else return currentMarker;-->
+<!--  };-->
+<!--  -->
+<!--  const renderNewTableData = (jQuery, tableData) => {-->
+<!--  -->
+<!--  };-->
+<!---->
+<!---->
+<!--  // incrementSize should be negative for previous button-->
+<!--  function ajaxLoadTableData($, incrementSize = 10, limit = 10) {-->
+<!--  -->
+<!--    // get and update the result marker to avoid invalid markations-->
+<!--    const oldMarker = getResultMarker();-->
+<!--    const resultMarker = adjustResultMarker(incrementSize, oldMarker, limit);-->
+<!--    console.log(resultMarker, `=====resultMarker=====`);-->
+<!--    console.log(incrementSize, `=====incrementSize=====`);-->
+<!--    console.log(limit, `=====limit=====`);-->
+<!--    -->
+<!--    // send an ajax request to get the new results-->
+<!--    var ajaxUrl = '--><?php //echo admin_url('admin-ajax.php') //'; ?>
+<!--//    $.post(-->
+<!--//      ajaxUrl,-->
+<!--//      {-->
+<!--//        limit,-->
+<!--//        resultMarker,-->
+<!--//        action : 'queryDbForNewSelection'-->
+<!--//      },-->
+<!--//      successResponse => {-->
+<!--//        console.log(successResponse, `=====successResponse=====`);-->
+<!--//-->
+<!--//        // update the resultMarker-->
+<!--//        setResultMarker(resultMarker, incrementSize)-->
+<!--//-->
+<!--//        // re-render the table-->
+<!--//        // renderNewTableData($, successResponse);-->
+<!--//      },-->
+<!--//      'json'-->
+<!--//    );-->
+<!--//-->
+<!--//  }-->
+<!--//-->
+<!--//  ///// JQUERY FUNCTIONS /////-->
+<!--//  jQuery(document).ready(function($) {-->
+<!--//    console.log(`====jquery loaded======`);-->
+<!--//-->
+<!--//    $('#previousButton').click(function() {-->
+<!--//      console.log(`=====CLICK=====`);-->
+<!--//      $('#couponTableBody').html('');-->
+<!--//      ajaxLoadTableData($, -10);-->
+<!--//    });-->
+<!--//    $('#nextButton').click(function() {-->
+<!--//      console.log(`=====CLICK=====`);-->
+<!--//      $('#couponTableBody').html('');-->
+<!--//      ajaxLoadTableData($, 10);-->
+<!--//    })-->
+<!--//  });-->
+<!--//-->
+<!--//</script>-->
 
 
 <style>

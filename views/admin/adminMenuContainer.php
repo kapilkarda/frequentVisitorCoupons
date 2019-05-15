@@ -63,11 +63,15 @@ add_action('admin_menu', 'adminSettings');
 function loadAdminScripts() {
   wp_register_style(
     'admin-style',
-    plugins_url('admin-style.css', __FILE__)
+    plugins_url('admin-style.css', __FILE__
+      )
   );
   wp_enqueue_style('admin-style');
-  wp_enqueue_script('jquery');
-}
+  
+  wp_enqueue_script('CurrentCouponListingSection', plugin_dir_url(__FILE__) . 'CurrentCouponListingSection.js',
+    ['jquery', 'underscore']
+    );
+  }
 add_action('admin_enqueue_scripts', 'loadAdminScripts');
 
 
