@@ -82,8 +82,13 @@ class ComposerStaticInit5261c738af354571f6b2a4fcee62a69e
             'Symfony\\Component\\CssSelector\\' => 30,
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\BrowserKit\\' => 29,
+            'SelfUpdate\\' => 11,
             'Seld\\PharUtils\\' => 15,
             'Seld\\JsonLint\\' => 14,
+        ),
+        'R' => 
+        array (
+            'Robo\\' => 5,
         ),
         'P' => 
         array (
@@ -99,12 +104,17 @@ class ComposerStaticInit5261c738af354571f6b2a4fcee62a69e
             'Mustangostang\\' => 14,
             'MikeMcLin\\WpPassword\\' => 21,
         ),
+        'L' => 
+        array (
+            'League\\Container\\' => 17,
+        ),
         'J' => 
         array (
             'JsonSchema\\' => 11,
         ),
         'I' => 
         array (
+            'Interop\\Container\\' => 18,
             'Illuminate\\Support\\' => 19,
             'Illuminate\\Contracts\\' => 21,
         ),
@@ -114,6 +124,8 @@ class ComposerStaticInit5261c738af354571f6b2a4fcee62a69e
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
             'Gumlet\\' => 7,
+            'Grasmash\\YamlExpander\\' => 22,
+            'Grasmash\\Expander\\' => 18,
             'Gettext\\Languages\\' => 18,
             'Gettext\\' => 8,
         ),
@@ -131,6 +143,10 @@ class ComposerStaticInit5261c738af354571f6b2a4fcee62a69e
         ),
         'C' => 
         array (
+            'Consolidation\\OutputFormatters\\' => 31,
+            'Consolidation\\Log\\' => 18,
+            'Consolidation\\Config\\' => 21,
+            'Consolidation\\AnnotatedCommand\\' => 31,
             'Composer\\XdebugHandler\\' => 23,
             'Composer\\Spdx\\' => 14,
             'Composer\\Semver\\' => 16,
@@ -240,6 +256,10 @@ class ComposerStaticInit5261c738af354571f6b2a4fcee62a69e
         array (
             0 => __DIR__ . '/..' . '/symfony/browser-kit',
         ),
+        'SelfUpdate\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/consolidation/self-update/src',
+        ),
         'Seld\\PharUtils\\' => 
         array (
             0 => __DIR__ . '/..' . '/seld/phar-utils/src',
@@ -247,6 +267,10 @@ class ComposerStaticInit5261c738af354571f6b2a4fcee62a69e
         'Seld\\JsonLint\\' => 
         array (
             0 => __DIR__ . '/..' . '/seld/jsonlint/src/Seld/JsonLint',
+        ),
+        'Robo\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/consolidation/robo/src',
         ),
         'Psr\\SimpleCache\\' => 
         array (
@@ -280,9 +304,17 @@ class ComposerStaticInit5261c738af354571f6b2a4fcee62a69e
         array (
             0 => __DIR__ . '/..' . '/mikemclin/laravel-wp-password/src',
         ),
+        'League\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/container/src',
+        ),
         'JsonSchema\\' => 
         array (
             0 => __DIR__ . '/..' . '/justinrainbow/json-schema/src/JsonSchema',
+        ),
+        'Interop\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
         ),
         'Illuminate\\Support\\' => 
         array (
@@ -307,6 +339,14 @@ class ComposerStaticInit5261c738af354571f6b2a4fcee62a69e
         'Gumlet\\' => 
         array (
             0 => __DIR__ . '/..' . '/gumlet/php-image-resize/lib',
+        ),
+        'Grasmash\\YamlExpander\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/grasmash/yaml-expander/src',
+        ),
+        'Grasmash\\Expander\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/grasmash/expander/src',
         ),
         'Gettext\\Languages\\' => 
         array (
@@ -339,6 +379,22 @@ class ComposerStaticInit5261c738af354571f6b2a4fcee62a69e
         'DeepCopy\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
+        ),
+        'Consolidation\\OutputFormatters\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/consolidation/output-formatters/src',
+        ),
+        'Consolidation\\Log\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/consolidation/log/src',
+        ),
+        'Consolidation\\Config\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/consolidation/config/src',
+        ),
+        'Consolidation\\AnnotatedCommand\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/consolidation/annotated-command/src',
         ),
         'Composer\\XdebugHandler\\' => 
         array (
@@ -465,6 +521,13 @@ class ComposerStaticInit5261c738af354571f6b2a4fcee62a69e
             'Handlebars' => 
             array (
                 0 => __DIR__ . '/..' . '/xamin/handlebars.php/src',
+            ),
+        ),
+        'D' => 
+        array (
+            'Dflydev\\DotAccessData' => 
+            array (
+                0 => __DIR__ . '/..' . '/dflydev/dot-access-data/src',
             ),
         ),
         'B' => 

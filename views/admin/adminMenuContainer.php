@@ -1,11 +1,15 @@
 <?php
 
-require __DIR__ . '/../../vendor/autoload.php';
+require PLUGIN_FOLDER . '/vendor/autoload.php';
 use \Firebase\JWT\JWT;
 
 
+
+
+//////// SETTINGS PAGE BUILDING ///////
+
 function buildSettingsPage() {
-  require_once __DIR__ . '/../../classes/AdminUtilities.php';
+  require_once PLUGIN_CLASSES . '/AdminUtilities.php';
 
 
   ////// NEW COUPON FORM //////
@@ -43,10 +47,8 @@ function buildSettingsPage() {
 }
 
 
-///// REGISTRATION HOOKS AND HANDLERS //////
-/// Must be in outer scope
 
-
+////// SCRIPT LOADING //////
 
 function adminSettings() {
   add_options_page(
@@ -75,14 +77,14 @@ function loadAdminScripts() {
 add_action('admin_enqueue_scripts', 'loadAdminScripts');
 
 
-// for the database calls
-function queryDbForNewSelection() {
-  require_once __DIR__ . '/../../classes/AdminUtilities.php';
-  
-  $targetData = AdminUtilities::loadTargets();
-  wp_send_json($targetData);
 
-  wp_die();
-}
 
-add_action( 'wp_ajax_queryDbForNewSelection', "queryDbForNewSelection");
+
+
+
+/////// ACTIONS FROM CHILD FILES /////////
+
+add_action( 'wp_ajax_queryDbForNewSelection', "AdminUtilities::queryDbForNewSelection");
+
+add_action('wp_ajax_callForCountOfTargets', 'AdminUtilities::countCurrentTargets');
+

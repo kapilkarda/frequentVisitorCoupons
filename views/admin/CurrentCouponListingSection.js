@@ -1,22 +1,64 @@
-console.log(`=====line 1 CCLS.js=====`);
+////// NOTES /////////
+
+
+////// INITIAL SETUP /////////
+
+// let ajaxUrl;
+
+if (typeof 'module' !== 'undefined') {
+  // let jQuery = null;
+  ajaxUrl = 'http://test.com'
+}
+
+
+//////// JS FUNCTION DECLARATIONS /////////
+
+const callForCountOfTargets = (jQuery) => {
+  jQuery.ajax(
+    ajaxUrl,
+    {
+      method: 'POST',
+      async: false, // key for the return to work
+      dataType: 'json',
+      data: {
+        action: 'callForCountOfTargets',
+      },
+      success: setCountOfTargets,
+      error: error => console.log(error, `=====error=====`),
+    }
+  );
+};
+if (typeof module !== 'undefined') {
+  module.exports.callForCountOfTargets = callForCountOfTargets;
+}
+
+
+const setCountOfTargets = function (response, variable) {
+  variable = response;
+  return variable;
+};
+if (typeof module !== 'undefined') {
+  module.exports.setCountOfTargets = setCountOfTargets;
+}
+
 
 const getResultMarker = () => {
   return localStorage.getItem('resultMarker')
 };
 
 const setResultMarker = (currentValue, incrementSize) => {
-  console.log(currentValue, `=====currentValue=====`);
-  console.log(incrementSize, `=====incrementSize=====`);
   
   const sum = currentValue + incrementSize;
-  console.log(sum, `=====sum=====`);
   localStorage.setItem('resultMarker', sum);
   
   return sum;
 };
 
 const adjustResultMarker = (incrementSize, currentMarker, limit) => {
-  console.log(currentMarker, `=====currentMarker=====`);
+  
+  // see what the upper limit is
+  $encodedCount = callForCountOfTargets();
+  
   if (!currentMarker || typeof currentMarker !== "number") {
     return 0
   } else if (currentMarker < 0) {
@@ -34,9 +76,6 @@ if (typeof module !== 'undefined') {
 }
 
 
-
-
-console.log(`=====line above renderTableData=====`);
 const renderNewTableData = (jQuery, tableData) => {
   // target the trs with a foreach
   jQuery(".couponDataRow").each(dataPoint => {
@@ -74,24 +113,36 @@ function ajaxLoadTableData($, incrementSize, limit = 10) {
     },
     'json'
   );
-  
 }
 
-///// JQUERY FUNCTIONS /////
+
+////// JQUERY DECLARATIONS //////
+
+const selectNewRecords = (jQueryObject, markerChange) => {
+  console.log(`=====inside spr=====`);
+  
+  // blank the table body
+  jQueryObject('#couponTableBody').html('');
+    
+  // load new ajax data into the view template
+  // this function runs renderNewTableData() on success
+  ajaxLoadTableData(jQueryObject, markerChange);
+};
+
+
+
+
+
+
+///// JQUERY CALLS /////
+
 jQuery(document).ready(function($) {
   console.log(`====jquery loaded======`);
 
-  $('#previousButton').click(function() {
-    console.log(`=====CLICK=====`);
-    $('#couponTableBody').html('');
-    ajaxLoadTableData($, -10);
-  });
+  $('#previousButton').click(() => selectNewRecords($, -10));
+
+  $('#nextButton').click(() => selectNewRecords($, 10))
   
-  $('#nextButton').click(function() {
-    console.log(`=====CLICK=====`);
-    $('#couponTableBody').html('');
-    ajaxLoadTableData($, 10);
-  })
 });
 
 

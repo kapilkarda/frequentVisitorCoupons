@@ -1,4 +1,19 @@
+const jQuery = require('../__mocks__/jQuery.js');
 const testFile = require("../CurrentCouponListingSection.js");
+
+// no real point to testing this
+// test('callForCountOfTargets', () => {
+//   expect(testFile.callForCountOfTargets(jQuery));
+//   expect(testFile.setCountOfTargets())
+//     .toHaveBeenCalled();
+// });
+
+
+test('setCountOfTargets', () => {
+  expect(testFile.setCountOfTargets(13, undefined))
+    .toEqual(13);
+});
+
 
 test('adjustResultMarker', () => {
   

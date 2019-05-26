@@ -33,6 +33,18 @@ class AdminUtilities {
     return $query;
   }
   
+  // for the database calls
+  public static function queryDbForNewSelection() {
+    require_once __DIR__ . '/../../classes/AdminUtilities.php';
+  
+    $targetData = self::loadTargets();
+    wp_send_json($targetData);
+  
+    wp_die();
+  }
+  
+  
+  
   public static function loadInitialTargets() {
     global $wpdb;
     
@@ -42,6 +54,20 @@ class AdminUtilities {
     ");
     
     return $targetData;
+  }
+  
+  
+  public static function countCurrentTargets(bool $debug = false) {
+    global $wpdb;
+  
+    $targetCount = $wpdb->get_var("select count(*) from {$wpdb->prefix}frequentVisitorCoupons_targets");
+    
+    if ($debug === true) {
+      $targetCount = json_encode($targetCount);
+      return $targetCount;
+    } else {
+      wp_send_json($targetCount);
+    }
   }
   
 }

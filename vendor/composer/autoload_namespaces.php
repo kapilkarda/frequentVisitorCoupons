@@ -15,6 +15,7 @@ return array(
     'Mustache' => array($vendorDir . '/mustache/mustache/src'),
     'Hautelook' => array($vendorDir . '/hautelook/phpass/src'),
     'Handlebars' => array($vendorDir . '/xamin/handlebars.php/src'),
+    'Dflydev\\DotAccessData' => array($vendorDir . '/dflydev/dot-access-data/src'),
     'Behat\\Gherkin' => array($vendorDir . '/behat/gherkin/src'),
     'BaconStringUtils' => array($vendorDir . '/bacon/bacon-string-utils/src'),
 );

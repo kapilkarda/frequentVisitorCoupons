@@ -4,6 +4,11 @@ Plugin Name: Frequent Visitor Coupons
 Description: Give coupons to visitors who visit your site frequently, or even a specific product page!
 */
 
+// global constant definitions
+define('PLUGIN_FOLDER', plugin_dir_path(__FILE__));
+define('PLUGIN_CLASSES', plugin_dir_path(__FILE__) . 'classes');
+define('WPUNIT_FOLDER', plugin_dir_path(__FILE__) . 'tests/wpunit');
+// jest tests are in different folders and there is no requiring of the target functions. The node export module contains all the test functions and the run script tests them inside the test functions
 
 
 // hooks into admin-menu
