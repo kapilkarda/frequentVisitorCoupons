@@ -7,13 +7,17 @@
 
 if (typeof 'module' !== 'undefined') {
   // let jQuery = null;
-  ajaxUrl = 'http://test.com'
+  let ajaxUrl = 'http://test.com'
 }
 
 
 //////// JS FUNCTION DECLARATIONS /////////
 
 const callForCountOfTargets = (jQuery) => {
+  console.log(`=====callForCountOfTargets=====`);
+  let countOfTargets;
+  console.log(countOfTargets, `=====countOfTargets=====`);
+  
   jQuery.ajax(
     ajaxUrl,
     {
@@ -23,18 +27,21 @@ const callForCountOfTargets = (jQuery) => {
       data: {
         action: 'callForCountOfTargets',
       },
-      success: setCountOfTargets,
+      success: response => { countOfTargets = response; },
       error: error => console.log(error, `=====error=====`),
     }
   );
+  
+  console.log(countOfTargets, `=====countOfTargets=====`);
+  return countOfTargets;
 };
 if (typeof module !== 'undefined') {
   module.exports.callForCountOfTargets = callForCountOfTargets;
 }
 
 
-const setCountOfTargets = function (response, variable) {
-  variable = response;
+const setCountOfTargets = function (response) {
+  countOfTargets = response;
   return variable;
 };
 if (typeof module !== 'undefined') {
@@ -54,10 +61,10 @@ const setResultMarker = (currentValue, incrementSize) => {
   return sum;
 };
 
-const adjustResultMarker = (incrementSize, currentMarker, limit) => {
+const adjustResultMarker = (incrementSize, currentMarker, limit, jQueryObject) => {
   
   // see what the upper limit is
-  $encodedCount = callForCountOfTargets();
+  $encodedCount = callForCountOfTargets(jQueryObject);
   
   if (!currentMarker || typeof currentMarker !== "number") {
     return 0
@@ -91,7 +98,7 @@ function ajaxLoadTableData($, incrementSize, limit = 10) {
   // get and update the result marker to avoid invalid markations
   const oldMarker = getResultMarker();
   console.log(oldMarker, `=====oldMarker=====`);
-  const resultMarker = adjustResultMarker(incrementSize, oldMarker, limit);
+  const resultMarker = adjustResultMarker(incrementSize, oldMarker, limit, $);
   console.log(resultMarker, `=====resultMarker=====`);
   
   // send an ajax request to get the new results
@@ -119,7 +126,6 @@ function ajaxLoadTableData($, incrementSize, limit = 10) {
 ////// JQUERY DECLARATIONS //////
 
 const selectNewRecords = (jQueryObject, markerChange) => {
-  console.log(`=====inside spr=====`);
   
   // blank the table body
   jQueryObject('#couponTableBody').html('');

@@ -1,6 +1,8 @@
 <?php
 
-require PLUGIN_FOLDER . '/vendor/autoload.php';
+require_once PLUGIN_FOLDER . '/vendor/autoload.php';
+require_once PLUGIN_CLASSES . '/AdminUtilities.php';
+
 use \Firebase\JWT\JWT;
 
 
@@ -10,7 +12,6 @@ use \Firebase\JWT\JWT;
 
 function buildSettingsPage() {
   require_once PLUGIN_CLASSES . '/AdminUtilities.php';
-
 
   ////// NEW COUPON FORM //////
   require_once 'NewCouponFormSection.php';
