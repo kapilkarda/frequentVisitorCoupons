@@ -1,52 +1,74 @@
+const currentFile = require('./CurrentCouponListingSection.js');
+
 ////// NOTES /////////
 
 
 ////// INITIAL SETUP /////////
 
-// let ajaxUrl;
+// assign, but also blank ajaxUrl and the others
+let jQuery;
+let fetch;
+let ajaxUrl;
 
-if (typeof 'module' !== 'undefined') {
-  // let jQuery = null;
-  let ajaxUrl = 'http://test.com'
+if (typeof module !== 'undefined') {
+  jQuery = require('jquery');
+  fetch = require("node-fetch");
+  ajaxUrl = 'http://localhost/wptest2/wp-admin/admin-ajax.php';
 }
 
+// if browser context === true, re-assign ajaxUrl from the window object
+if (typeof window !== 'undefined' && window.ajaxUrl) {
+  ajaxUrl = window.ajaxUrl;
+}
 
 //////// JS FUNCTION DECLARATIONS /////////
 
-const callForCountOfTargets = (jQuery) => {
-  console.log(`=====callForCountOfTargets=====`);
-  let countOfTargets;
-  console.log(countOfTargets, `=====countOfTargets=====`);
+
+const a = () => {
+  return currentFile.b();
+};
+
+
+const b = () => {
+  return 'original from b'
+};
+
+
+
+const callForCountOfTargets = async () => {
+  const parameters = { action: 'callForCountOfTargets' };
   
-  jQuery.ajax(
-    ajaxUrl,
-    {
-      method: 'POST',
-      async: false, // key for the return to work
-      dataType: 'json',
-      data: {
-        action: 'callForCountOfTargets',
+  try {
+    const ajaxResponse = await fetch(ajaxUrl, {
+      method : 'POST',
+      headers : {
+        'Content-Type' : 'application/json'
       },
-      success: response => { countOfTargets = response; },
-      error: error => console.log(error, `=====error=====`),
-    }
-  );
+      body : JSON.stringify(parameters),
+    });
   
-  console.log(countOfTargets, `=====countOfTargets=====`);
-  return countOfTargets;
+    // .json() returns a resolved promise. The resolved value is a JSON object
+    const countOfTargets = await ajaxResponse.json()
+      .catch(e => console.log(e, `=====e=====`));
+    return countOfTargets;
+    
+  }
+  
+  catch (e) {
+    console.log(e, `=====error=====`);
+  }
 };
-if (typeof module !== 'undefined') {
-  module.exports.callForCountOfTargets = callForCountOfTargets;
-}
 
 
-const setCountOfTargets = function (response) {
-  countOfTargets = response;
-  return variable;
-};
-if (typeof module !== 'undefined') {
-  module.exports.setCountOfTargets = setCountOfTargets;
-}
+
+
+// const setCountOfTargets = function (response) {
+//   countOfTargets = response;
+//   return variable;
+// };
+// if (typeof module !== 'undefined') {
+//   module.exports.setCountOfTargets = setCountOfTargets;
+// }
 
 
 const getResultMarker = () => {
@@ -64,7 +86,7 @@ const setResultMarker = (currentValue, incrementSize) => {
 const adjustResultMarker = (incrementSize, currentMarker, limit, jQueryObject) => {
   
   // see what the upper limit is
-  $encodedCount = callForCountOfTargets(jQueryObject);
+  const encodedCount = callForCountOfTargets(jQueryObject);
   
   if (!currentMarker || typeof currentMarker !== "number") {
     return 0
@@ -78,21 +100,61 @@ const adjustResultMarker = (incrementSize, currentMarker, limit, jQueryObject) =
   }
   else return currentMarker;
 };
-if (typeof module !== 'undefined') {
-  module.exports.adjustResultMarker = adjustResultMarker;
-}
+
 
 
 const renderNewTableData = (jQuery, tableData) => {
   // target the trs with a foreach
   jQuery(".couponDataRow").each(dataPoint => {
     // design new tds
+  
+    console.log(`=====renderNewTableData TODO design the TDs to add=====`);
   })
 };
 
 
 // incrementSize should be negative for previous button
-function ajaxLoadTableData($, incrementSize, limit = 10) {
+const getDataSelection = async (incrementSize, limit = 10) => {
+  const ajaxResponse = await fetch(ajaxUrl, {
+    method : 'POST',
+    headers : {
+      'Content-Type' : 'application/json',
+    },
+    body : JSON.stringify(
+      {
+        incrementSize,
+        limit,
+        action : 'queryDbForNewSelection'
+      })
+  });
+  
+  const newSelection = await ajaxResponse.json();
+  return newSelection;
+};
+
+
+async function ajaxLoadTableData (resultMarker, limit = 10) {
+  try {
+    const records = await fetch(ajaxUrl, {
+      method : 'POST',
+      headers : { 'Content-Type' : 'application/json' },
+      body : {
+        action : 'queryDbForNewSelection',
+        resultMarker,
+        limit
+      },
+    }).then(response => response);
+  
+    return records;
+  }
+  
+  catch (error) {
+    console.log(error, `=====error in ajaxLoadTableData()=====`);
+  }
+}
+
+/*
+function ajaxLoadTableData2($, incrementSize, limit = 10) {
   console.log(`=====ajax table load attempted=====`);
   
   // get and update the result marker to avoid invalid markations
@@ -120,20 +182,33 @@ function ajaxLoadTableData($, incrementSize, limit = 10) {
     },
     'json'
   );
-}
+}*/
 
 
 ////// JQUERY DECLARATIONS //////
 
+/*
 const selectNewRecords = (jQueryObject, markerChange) => {
   
   // blank the table body
   jQueryObject('#couponTableBody').html('');
-    
+  
+  const oldMarker = getResultMarker();
+  console.log(oldMarker, `=====oldMarker=====`);
+  const resultMarker = adjustResultMarker(markerChange, oldMarker);
+  console.log(resultMarker, `=====resultMarker=====`);
+  
   // load new ajax data into the view template
   // this function runs renderNewTableData() on success
-  ajaxLoadTableData(jQueryObject, markerChange);
+  const newData = getDataSelection(markerChange);
+  
+  // update the resultMarker
+  setResultMarker(resultMarker, markerChange);
+  
+  // re-render the table
+  renderNewTableData(jQueryObject, newData);
 };
+*/
 
 
 
@@ -145,10 +220,25 @@ const selectNewRecords = (jQueryObject, markerChange) => {
 jQuery(document).ready(function($) {
   console.log(`====jquery loaded======`);
 
-  $('#previousButton').click(() => selectNewRecords($, -10));
+  // $('#previousButton').click(() => selectNewRecords($, -10));
 
-  $('#nextButton').click(() => selectNewRecords($, 10))
+  
   
 });
 
+
+
+////// EXPORTS //////
+if (typeof module.exports !== 'undefined') {
+  // parent functions
+  exports.a = a;
+  exports.b = b;
+  exports.adjustResultMarker = adjustResultMarker;
+  exports.ajaxLoadTableData = ajaxLoadTableData;
+  exports.getResultMarker = getResultMarker;
+  exports.setResultMarker = setResultMarker;
+  exports.callForCountOfTargets = callForCountOfTargets;
+  exports.renderNewTableData = renderNewTableData;
+
+}
 
