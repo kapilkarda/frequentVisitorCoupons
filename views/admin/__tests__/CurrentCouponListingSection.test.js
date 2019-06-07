@@ -1,8 +1,10 @@
 // mock jQuery and its methods
 // const ready = jest.fn();
 // const jQuery = jest.fn({ ready });
-
+global.fetch = require('jest-fetch-mock');
 const targetFile = require("../CurrentCouponListingSection.js");
+
+
 
 
 ////// FILE SCOPE SETUP //////
@@ -15,10 +17,10 @@ const targetFile = require("../CurrentCouponListingSection.js");
 
 
 // Applies to all tests in this file
-beforeEach(() => {
-  fetch.resetMocks();
-  
-});
+// beforeEach(() => {
+//   fetch.resetMocks();
+//
+// });
 
 
 
@@ -84,22 +86,18 @@ beforeEach(() => {
 // });
 
 
-test('a and b', () => {
-  // console.log(targetFile.b(), `=====b()=====`);
-  const b = jest.spyOn(targetFile, 'b');
-  const a = jest.spyOn(targetFile, 'a');
-  console.log(a(), `=====a() before mocking b=====`);
-  
-  b.mockReturnValueOnce('mockd value');
-  
-  expect(a()).toEqual('mockd value');
-});
+// test('a and b', () => {
+//   // console.log(targetFile.b(), `=====b()=====`);
+//   const b = jest.spyOn(targetFile, 'b');
+//   const a = jest.spyOn(targetFile, 'a');
+//   console.log(a(), `=====a() before mocking b=====`);
+//
+//   b.mockReturnValueOnce('mockd value');
+//
+//   expect(a()).toEqual('mockd value');
+// });
 
 
-
-test('adjustResultMarker', () => {
-
-});
 
 
 
@@ -123,13 +121,66 @@ test('adjustResultMarker', () => {
 
 
 
-test('adjustResultMarker', () => {
+test('testF', async () => {
+  await fetch.mockResponseOnce(JSON.stringify(2));
+
+  await targetFile.testF().then(jsonData => {
+    expect(jsonData).toEqual(2)
+  });
+});
+
+
+
+const callForCountOfTargets = () => {
+  const parameters = { action: 'callForCountOfTargets' };
+  
+  try {
+    const ajaxResponse = fetch('', {
+      method : 'POST',
+      headers : {
+        'Content-Type' : 'application/json'
+      },
+      body : JSON.stringify(parameters),
+    })
+      .then(res => res.json())
+      .catch(e => console.log(e, `=====e=====`));
+    
+    return ajaxResponse;
+  }
+  
+  catch (e) {
+    console.log(e, `=====error=====`);
+  }
+};
+
+test.skip('callForCountOfTargets', async () => {
+  await fetch.mockResponseOnce(JSON.stringify(5));
+  
+  await targetFile.callForCountOfTargets()
+    .then(jsonData => {
+      // expect(fetch.mock.calls.length).toEqual(4);
+      expect(jsonData).toEqual(3)
+    })
+});
+
+
+
+
+test.skip('adjustResultMarker', () => {
+  
+  // returned promise
+  const callForCountOfTargets = jest.spyOn(targetFile, 'callForCountOfTargets');
+  callForCountOfTargets.mockImplementationOnce(() => 12);
+  console.log(callForCountOfTargets(), `=====callForCountOfTargets=====`);
+  console.log(callForCountOfTargets(), `=====callForCountOfTargets=====`);
+  
   
   expect(targetFile.adjustResultMarker(10, 0, 10)).toStrictEqual(0);
   expect(targetFile.adjustResultMarker(10, 23, 10)).toStrictEqual(23);
   expect(targetFile.adjustResultMarker(-10, 5, 10)).toStrictEqual(0);
+  
+  
 });
-
 
 
 

@@ -22,13 +22,17 @@
   "homepage": "https://github.com/SeanDez/frequentVisitorCoupons#readme",
   "devDependencies": {
     "jest": "^24.8.0",
-    "jest-fetch-mock": "^2.1.2"
+    "jest-fetch-mock": "^2.1.2",
+    "jest-localstorage-mock": "^2.4.0"
   },
   "dependencies": {
     "jquery": "^3.4.1",
     "node-fetch": "^2.6.0"
   },
-  "jest" : {
-    "setupFiles": ["./setupJest.js"]
+  "jest": {
+    "setupFiles": [
+      "./setupJest.js",
+      "jest-localstorage-mock"
+    ]
   }
 }

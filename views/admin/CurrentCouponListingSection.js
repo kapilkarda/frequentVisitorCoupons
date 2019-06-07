@@ -35,23 +35,21 @@ const b = () => {
 
 
 
-const callForCountOfTargets = async () => {
+const callForCountOfTargets = () => {
   const parameters = { action: 'callForCountOfTargets' };
   
   try {
-    const ajaxResponse = await fetch(ajaxUrl, {
+    const ajaxResponse = fetch('http://t.com', {
       method : 'POST',
       headers : {
         'Content-Type' : 'application/json'
       },
       body : JSON.stringify(parameters),
-    });
-  
-    // .json() returns a resolved promise. The resolved value is a JSON object
-    const countOfTargets = await ajaxResponse.json()
+    })
+      .then(res => res.json())
       .catch(e => console.log(e, `=====e=====`));
-    return countOfTargets;
     
+    return ajaxResponse;
   }
   
   catch (e) {
@@ -83,10 +81,10 @@ const setResultMarker = (currentValue, incrementSize) => {
   return sum;
 };
 
-const adjustResultMarker = (incrementSize, currentMarker, limit, jQueryObject) => {
+const adjustResultMarker = async (incrementSize, currentMarker, limit, jQueryObject) => {
   
   // see what the upper limit is
-  const encodedCount = callForCountOfTargets(jQueryObject);
+  const encodedCount = await callForCountOfTargets(jQueryObject);
   
   if (!currentMarker || typeof currentMarker !== "number") {
     return 0
@@ -218,7 +216,6 @@ const selectNewRecords = (jQueryObject, markerChange) => {
 ///// JQUERY CALLS /////
 
 jQuery(document).ready(function($) {
-  console.log(`====jquery loaded======`);
 
   // $('#previousButton').click(() => selectNewRecords($, -10));
 
@@ -226,13 +223,19 @@ jQuery(document).ready(function($) {
   
 });
 
-
+const testF = () => {
+  return fetch(null, {
+    body : JSON.stringify(4)
+  })
+    .then(res => res.json());
+};
 
 ////// EXPORTS //////
 if (typeof module.exports !== 'undefined') {
   // parent functions
   exports.a = a;
   exports.b = b;
+  exports.testF = testF;
   exports.adjustResultMarker = adjustResultMarker;
   exports.ajaxLoadTableData = ajaxLoadTableData;
   exports.getResultMarker = getResultMarker;
